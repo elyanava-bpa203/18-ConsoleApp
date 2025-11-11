@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Controllers
+namespace Academy_Presentation.Controller
 {
-    internal class GroupController
+    internal class StudentController
     {
     }
 }
