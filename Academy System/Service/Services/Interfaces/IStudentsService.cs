@@ -8,8 +8,16 @@ using System.Threading.Tasks;
 
 namespace Service.Services.Interfaces
 {
-    public class IStudentsService
-    {
-        Student Create(int groupId, Student student);
-    }
+        public interface IStudentService
+        {
+            Student Create(int groupId, Student student);
+            void Update(Student student);
+            Student GetById(int id);
+            void Delete(int id);
+            List<Student> GetByAge(int age);
+            List<Student> GetAllByGroupId(int groupId);
+            List<Student> Search(string searchTerm);
+        }
+
+    
 }
