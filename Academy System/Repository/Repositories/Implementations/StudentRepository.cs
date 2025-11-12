@@ -12,7 +12,7 @@ namespace Repository.Repositories.Implementations
 {
     public class StudentRepository : IRepository<Student>
     {
-        public void Create(Student data)
+        public void CreateStudent(Student data)
         {
             try
             {
@@ -25,24 +25,21 @@ namespace Repository.Repositories.Implementations
             }
         }
 
-        public void Delete(Student data)
+        public void DeleteStudent(Student data)
         {
             AppDbContext<Student>.datas.Remove(data);
         }
 
-        public Student Get(Predicate<Student> predicate)
-        {
-            return predicate != null ? AppDbContext<Student>.datas.Find(predicate) : null;
-        }
+        
 
-        public List<Student> GetAll(Predicate<Student> predicate = null)
+        public List<Student> GetAllStudent(Predicate<Student> predicate = null)
         {
             return predicate != null ? AppDbContext<Student>.datas.FindAll(predicate) : AppDbContext<Student>.datas;
         }
 
-        public void Update(Student data)
+        public void UpdateStudent(Student data)
         {
-            Student dbStudent = Get(s => s.Id == data.Id);
+            Student dbStudent = GetStudentById(s => s.Id == data.Id);
 
             if (dbStudent == null) return;
 
@@ -59,23 +56,56 @@ namespace Repository.Repositories.Implementations
                 dbStudent.Group = data.Group;
         }
 
-       
-
-        public List<Student> GetByAge(int age)
+        private Student GetStudentById(Func<object, bool> value)
         {
-            return GetAll(s => s.Age == age);
+            throw new NotImplementedException();
         }
 
-        public List<Student> GetByGroupId(int groupId)
+        public List<Student> GetStudentByAge(int age)
         {
-            return GetAll(s => s.Group != null && s.Group.Id == groupId);
+            return GetAllStudent(s => s.Age == age);
         }
 
-        public List<Student> Search(string text)
+        public List<Student> GetStudentById(int groupId)
         {
-            return GetAll(s =>
+            return GetAllStudent(s => s.Group != null && s.Group.Id == groupId);
+        }
+
+
+
+
+
+
+        public List<Student> SearchStudent(string text)
+        {
+            return GetAllStudent(s =>
                 s.Name.ToLower().Contains(text.ToLower()) ||
                 s.Surname.ToLower().Contains(text.ToLower()));
+        }
+
+        public void Create(Student data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(Student data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete(Student data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Student Get(Predicate<Student> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Student> GetAll(Predicate<Student> predicate)
+        {
+            throw new NotImplementedException();
         }
     }
 

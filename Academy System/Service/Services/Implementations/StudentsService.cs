@@ -5,8 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Domain.Entities;
+using Service.Services.Interfaces;
+using Repository.Repositories.Implementations;
 using System.Threading.Tasks;
-using static Service.Services.Implementations.StudentsService;
+
 
 namespace Service.Services.Implementations
 {
@@ -24,11 +27,11 @@ namespace Service.Services.Implementations
         }
 
       
-            // 8 - Create Student
-            public Student Create(int groupId, Student student)
+            
+            public Student CreateStudent(int groupId, Student student)
             {
-                var group = _groupRepository.GetType(g => g.Id == groupId);
-                if (group == null) return null;
+            var group = _groupRepository.GetType(g => g.Id == group.Id);
+                if (group is  null) return null;
 
                 student.Id = _count;
                 student.Group = group;
@@ -39,7 +42,7 @@ namespace Service.Services.Implementations
                 return student;
             }
 
-            // 9 - Update Student
+            
             public void Update(Student student)
             {
                 var dbStudent = _studentRepository.Get(s => s.Id == student.Id);
@@ -52,13 +55,13 @@ namespace Service.Services.Implementations
                 _studentRepository.Update(dbStudent);
             }
 
-            // 10 - Get student by id
+            
             public Student GetById(int id)
             {
                 return _studentRepository.Get(s => s.Id == id);
             }
 
-            // 11 - Delete student
+            
             public void Delete(int id)
             {
                 var student = _studentRepository.Get(s => s.Id == id);
@@ -68,26 +71,29 @@ namespace Service.Services.Implementations
                 }
             }
 
-            // 12 - Get students by age
+            
             public List<Student> GetByAge(int age)
             {
                 return _studentRepository.GetAll(s => s.Age == age);
             }
 
-            // 13 - Get all students by group id
+            
             public List<Student> GetAllByGroupId(int groupId)
             {
                 return _studentRepository.GetAll(s => s.Group != null && s.Group.Id == groupId);
             }
 
-            // 15 - Search method for students by name or surname
+            
             public List<Student> Search(string searchTerm)
             {
                 return _studentRepository.GetAll(s => s.Name.Contains(searchTerm) || s.Surname.Contains(searchTerm));
             }
         }
 
+    public interface IStudentsService
+    {
     }
+}
 
 
 }
