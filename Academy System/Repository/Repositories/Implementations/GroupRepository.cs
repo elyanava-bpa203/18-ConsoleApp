@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Repository.Data;
+using Repository.Exceptions;
 using Repository.Repositories.İnterfaces;
 using System;
 using System.Collections.Generic;
@@ -9,13 +10,14 @@ using System.Threading.Tasks;
 
 namespace Repository.Repositories.Implementations
 {
-    public class GroupRepository : IRepository<Group>
+    public class GroupRepository : IGroupRepository<Group>
     {
-        public void Create(Group data)
+        public void CreateGroup(Group data)
         {
             try
             {
-                if (data == null) throw new NotFoundException("Data not found!");
+                if (data == null)
+                    throw new NotFoundExceptions("Data not found!");
 
                 AppDbContext<Group>.datas.Add(data);
             }
@@ -25,97 +27,65 @@ namespace Repository.Repositories.Implementations
             }
         }
 
-        public void Delete(Group data)
+        public void DeleteGroup(Group data)
         {
-            AppDbContext<Group>.datas.Remove(data);
-        }
-
-        public Group Get(Predicate<Group> predicate)
-        {
-            return predicate != null ? AppDbContext<Group>.datas.Find(predicate) : null;
-        }
-
-        public List<Group> GetAll(Predicate<Group> predicate = null)
-        {
-            return predicate != null ? AppDbContext<Group>.datas.FindAll(predicate) : AppDbContext<Group>.datas;
-        }
-
-        public void Update(Group data)
-        {
-            Group dbGroup = Get(g => g.Id == data.Id);
-
-            if (dbGroup == null) return;
-
-            if (!string.IsNullOrEmpty(data.Name))
+            try
             {
-                dbGroup.Name = data.Name;
+                if (!AppDbContext<Group>.datas.Remove(data))
+                    throw new NotFoundExceptions("Group not found!");
             }
-            if (!string.IsNullOrEmpty(data.Teacher))
-                dbGroup.Teacher = data.Teacher;
-
-            if (data.Room > 0)
-                dbGroup.Room = data.Room;
-
-        }
-
-
-        public List<Group> GetByTeacher(string teacher)
-        {
-            return GetAll(g => g.Teacher == teacher);
-        }
-
-        public List<Group> GetByRoom(int room)
-        {
-            return GetAll(g => g.Room == room);
-        }
-
-        public List<Group> SearchByName(string name)
-        {
-            return GetAll(g => g.Name.ToLower().Contains(name.ToLower()));
-        }
-
-        public void Update(object updatedGroup)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Create(System.Text.RegularExpressions.Group group)
-        {
-            throw new NotImplementedException();
-        }
-
-
-
-
-
-
-
-
-
-
-
-        [Serializable]
-        internal class NotFoundException : Exception
-        {
-            public NotFoundException()
+            catch (Exception ex)
             {
-            }
-
-            public NotFoundException(string? message) : base(message)
-            {
-            }
-
-            public NotFoundException(string? message, Exception? innerException) : base(message, innerException)
-            {
+                Console.WriteLine(ex.Message);
             }
         }
 
-        internal class Library
+        public List<Group> GetAllGroups(Predicate<Group> predicate)
         {
+            return AppDbContext<Group>.datas.FindAll(predicate);
         }
 
+        public List<Group> GetAllGroupsByRoom(Predicate<Group> predicate)
+        {
+            return AppDbContext<Group>.datas.FindAll(predicate);
+        }
 
+        public List<Group> GetAllGroupsByTeacher(Predicate<Group> predicate)
+        {
+            return AppDbContext<Group>.datas.FindAll(predicate);
+        }
 
+        public Group GetGroupById(Predicate<Group> predicate)
+        {
+            return AppDbContext<Group>.datas.Find(predicate);
+        }
 
+        public Group SearchMethodForGroupsByName(Predicate<Group> predicate)
+        {
+            return AppDbContext<Group>.datas.Find(predicate);
+        }
+
+        public void UpdateGroup(Group data)
+        {
+            try
+            {
+                var existingGroup = AppDbContext<Group>.datas.Find(g => g.Id == data.Id);
+                if (existingGroup == null)
+                    throw new NotFoundExceptions("Group not found!");
+
+                if (!string.IsNullOrWhiteSpace(data.Name))
+                    existingGroup.Name = data.Name;
+
+                if (!string.IsNullOrWhiteSpace(data.Teacher))
+                    existingGroup.Teacher = data.Teacher;
+
+                if (data.Room > 0)
+                    existingGroup.Room = data.Room;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
     }
 }

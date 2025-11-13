@@ -1,5 +1,8 @@
 ﻿using Academy_Presentation.Helpers;
 using System;
+using Domain.Entities;
+using Repository.Repository.Implementations;
+using Service.Services.Implementations;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -38,7 +41,7 @@ namespace Academy_Presentation.Controller
                 }
 
                 var student = new Student { Name = name, Surname = surname, Age = age };
-                var result = _studentService.Create(groupId, student);
+                var result = _studentService.Cre
 
                 if (result != null)
                     Helper.PrintConsole(ConsoleColor.Green, $"Student created: Id: {result.Id}, Name: {result.Name}, Surname: {result.Surname}, Age: {result.Age}, GroupId: {result.Group.Id}");

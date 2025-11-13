@@ -5,96 +5,81 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Domain.Entities;
-using Service.Services.Interfaces;
-using Repository.Repositories.Implementations;
-using System.Threading.Tasks;
 
 
-namespace Service.Services.Implementations
+
+namespace Service.Services.Implementations 
+
 {
-    public class StudentsService : IStudentsService
+    public class StudentsService : IStudentService
     {
-        private StudentRepository _studentRepository;
-        private GroupRepository _groupReposotory;
+        private readonly StudentRepository _studentRepository;
         private int _count = 1;
-        private object _groupRepository;
 
         public StudentsService()
         {
-            _studentRepository = new();
-            _groupReposotory = new();
+            _studentRepository = new StudentRepository();
         }
 
-      
-            
-            public Student CreateStudent(int groupId, Student student)
-            {
-            var group = _groupRepository.GetType(g => g.Id == group.Id);
-                if (group is  null) return null;
+        public Student CreateStudent(int groupId, Student student)
+        {
+            student.Id = _count;
 
-                student.Id = _count;
-                student.Group = group;
+            _studentRepository.CreateStudent(student);
 
-                _studentRepository.Create(student);
-                _count++;
+            _count++;
 
-                return student;
-            }
-
-            
-            public void Update(Student student)
-            {
-                var dbStudent = _studentRepository.Get(s => s.Id == student.Id);
-                if (dbStudent == null) return;
-
-                dbStudent.Name = student.Name ?? dbStudent.Name;
-                dbStudent.Surname = student.Surname ?? dbStudent.Surname;
-                dbStudent.Age = student.Age != 0 ? student.Age : dbStudent.Age;
-
-                _studentRepository.Update(dbStudent);
-            }
-
-            
-            public Student GetById(int id)
-            {
-                return _studentRepository.Get(s => s.Id == id);
-            }
-
-            
-            public void Delete(int id)
-            {
-                var student = _studentRepository.Get(s => s.Id == id);
-                if (student != null)
-                {
-                    _studentRepository.Delete(student);
-                }
-            }
-
-            
-            public List<Student> GetByAge(int age)
-            {
-                return _studentRepository.GetAll(s => s.Age == age);
-            }
-
-            
-            public List<Student> GetAllByGroupId(int groupId)
-            {
-                return _studentRepository.GetAll(s => s.Group != null && s.Group.Id == groupId);
-            }
-
-            
-            public List<Student> Search(string searchTerm)
-            {
-                return _studentRepository.GetAll(s => s.Name.Contains(searchTerm) || s.Surname.Contains(searchTerm));
-            }
+            return student;
         }
 
-    public interface IStudentsService
-    {
+        public void DeleteStudent(int id)
+        {
+            Student student = GetStudentById(id);
+
+            if (student != null)
+                _studentRepository.DeleteStudent(student);
+        }
+
+        public List<Student> GetAllStudentByGroupId(int groupId)
+        {
+            return _studentRepository.GetStudentById();
+        }
+
+        public List<Student> GetStudentByAge(int age)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Student GetStudentById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Student> SearchStudent(string searchText)
+        {
+            if (string.IsNullOrWhiteSpace(searchText))
+                return new List<Student>();
+
+            return _studentRepository.GetAll()
+                .Where(s =>
+                    (!string.IsNullOrEmpty(s.Name) && s.Name.Trim().ToLower() == searchText.Trim().ToLower()) ||
+                    (!string.IsNullOrEmpty(s.Surname) && s.Surname.Trim().ToLower() == searchText.Trim().ToLower()) ||
+                    (s.Group != null && !string.IsNullOrEmpty(s.Group.Name) && s.Group.Name.Trim().ToLower() == searchText.Trim().ToLower())
+                )
+                .ToList();
+        }
+
+        public void UpdateStudent(Student student)
+        {
+            Student dbStudent = GetById(id);
+
+            if (dbStudent == null) 
+
+            student.Id = id;
+            _studentRepository.UpdateStudent(student);
+
+            return GetById(id);
+        }
     }
-}
 
-
-}
 }

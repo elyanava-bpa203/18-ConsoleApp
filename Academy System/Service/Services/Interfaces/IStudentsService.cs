@@ -10,13 +10,13 @@ namespace Service.Services.Interfaces
 {
         public interface IStudentService
         {
-            Student Create(int groupId, Student student);
-            void Update(Student student);
-            Student GetById(int id);
-            void Delete(int id);
-            List<Student> GetByAge(int age);
-            List<Student> GetAllByGroupId(int groupId);
-            List<Student> Search(string searchTerm);
+            Student CreateStudent(int groupId, Student student);
+            void UpdateStudent(Student student);
+            Student GetStudentById(int id);
+            void DeleteStudent(int id);
+            List<Student> GetStudentByAge(int age);
+            List<Student> GetAllStudentByGroupId(int groupId);
+            List<Student> SearchStudent(string searchText);
         }
 
     

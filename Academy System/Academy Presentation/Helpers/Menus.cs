@@ -22,6 +22,6 @@ namespace LibrarySystem.Presentation.Helpers
          GetStudentsByAge=12,
          GetAllStudentsByGroupId=13,
          SearchMethodForGroupsByName=14,
-         SearchMethodForStudentByNameOrSurname=15
+         SearchMethodForStudentsByNameOrSurname=15
     }
 }
